@@ -16,14 +16,11 @@ abstract class AbstractAdnSms
     protected $format;
     protected $campaignTitle;
     protected $requestType;
+    protected $isPromotional;
     protected $apiUrl;
 
-    private $allowedRequestTypes = [
-        'SINGLE_SMS', 'OTP', 'GENERAL_CAMPAIGN', 'MULTIBODY_CAMPAIGN'
-    ];
-    private $allowedMessageFormats = [
-        'TEXT', 'UNICODE'
-    ];
+    private $allowedRequestTypes = ['SINGLE_SMS', 'OTP', 'GENERAL_CAMPAIGN', 'MULTIBODY_CAMPAIGN'];
+    private $allowedMessageFormats = ['TEXT', 'UNICODE'];
 
     /**
      * @return string
@@ -55,6 +52,22 @@ abstract class AbstractAdnSms
     protected function setApiSecret(string $apiSecret)
     {
         $this->apiSecret = $apiSecret;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsPromotional()
+    {
+        return $this->isPromotional;
+    }
+
+    /**
+     * @param bool $isPromotional
+     */
+    public function setIsPromotional(bool $isPromotional): void
+    {
+        $this->isPromotional = $isPromotional;
     }
 
     /**
@@ -129,7 +142,7 @@ abstract class AbstractAdnSms
      */
     protected function getRecipient()
     {
-        throw_if(empty($this->recipient), new MissingRequiredMethodCallException('Missing required method call to()'));
+        throw_if(empty($this->recipient), new MissingRequiredMethodCallException('Recipient list is empty.'));
 
         return $this->recipient;
     }

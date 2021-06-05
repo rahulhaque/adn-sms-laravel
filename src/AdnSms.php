@@ -71,6 +71,8 @@ class AdnSms extends AbstractAdnSms
 
         $this->setRecipient(implode(',', $recipients));
 
+        $this->setIsPromotional($this->getFormat() == 'TEXT');
+
         return $this;
     }
 
@@ -163,6 +165,14 @@ class AdnSms extends AbstractAdnSms
             'request_type' => $this->getRequestType(),
             'message_type' => $this->getFormat(),
         ];
+
+        if ($this->getCampaignTitle()) {
+            $data['campaign_title'] = $this->getCampaignTitle();
+        }
+
+        if ($this->getIsPromotional()) {
+            $data['isPromotional'] = $this->getIsPromotional();
+        }
 
         return $this->callToApi($data);
     }
