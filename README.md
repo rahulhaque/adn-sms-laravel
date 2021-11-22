@@ -41,7 +41,7 @@ $app->register(RahulHaque\AdnSms\AdnSmsServiceProvider::class);
 
 Define your `ADN_SMS_KEY` and `ADN_SMS_SECRET` in the `.env` file of your application.
 
-Or publish the config by copying the `vendor/rahulhaque/adn-sms/config/adn-sms.php` file to `config/adn-sms.php` of your Lumen application. Create the directory if doesn't exist. Register the config in the `bootstrap/app.php` file in the **Register Config Files** section.
+Or publish the config by copying the `vendor/rahulhaque/adn-sms/config/adn-sms.php` file to `config/adn-sms.php` of your Lumen application. Create the directory if doesn't exist. Register the config in the `bootstrap/app.php` file in the **Register Configuration Files** section.
 
 ```php
 $app->configure('adn-sms');
@@ -49,7 +49,11 @@ $app->configure('adn-sms');
 
 ## Configuration
 
-First have a look at the `./config/adn-sms.php` to know about all the options available out of the box.
+First have a look at the `./config/adn-sms.php` to know about all the options available out of the box. Some important ones mentioned below.
+
+**Service Enable/Disable**
+
+If you happen to disable the service in the configuration file, remember that the response body will always be empty. So, it is better to if check the response is empty before accessing any key from it. For example, access the response when `$response->body() != ""`
 
 ## Usage
 
@@ -156,9 +160,11 @@ class SomeController
             ->message('Send Bulk SMS Test.')
             ->queue(function (Response $response) {
                 // Process the $response further
-                $model = new Table();
-                $model->data = $response->body();
-                $model->save();
+                if ($response->body() != "") {
+                    $model = new Table();
+                	$model->data = $response->body();
+                	$model->save();
+                }
             });
     }
 }
