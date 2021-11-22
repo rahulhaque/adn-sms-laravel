@@ -162,8 +162,8 @@ class SomeController
                 // Process the $response further
                 if ($response->body() != "") {
                     $model = new Table();
-                	$model->data = $response->body();
-                	$model->save();
+                    $model->data = $response->body();
+                    $model->save();
                 }
             });
     }
