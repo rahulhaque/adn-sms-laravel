@@ -1,3 +1,5 @@
+.idea/
+.code/
 build
 composer.lock
 docs

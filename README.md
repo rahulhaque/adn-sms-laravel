@@ -47,6 +47,10 @@ Or publish the config by copying the `vendor/rahulhaque/adn-sms/config/adn-sms.p
 $app->configure('adn-sms');
 ```
 
+## Configuration
+
+First have a look at the `./config/adn-sms.php` to know about all the options available out of the box.
+
 ## Usage
 
 ### Single SMS
@@ -60,12 +64,19 @@ use RahulHaque\AdnSms\Facades\AdnSms;
 
 class SomeController
 {
+    /**
+     * Make request and return response
+     *
+     * @return \Illuminate\Http\Client\Response
+     * @throws \Throwable
+     */
     public function someFunction()
     {
         $response = AdnSms::to('01XXXXXXXXX')
             ->message('Send SMS Test.')
             ->send();
-        dd($response->json());
+        
+        return $response->json();
     }
 }
 ```
@@ -81,12 +92,19 @@ use RahulHaque\AdnSms\Facades\AdnSms;
 
 class SomeController
 {
+    /**
+     * Make request and return response
+     *
+     * @return \Illuminate\Http\Client\Response
+     * @throws \Throwable
+     */
     public function someFunction()
     {
         $response = AdnSms::otp('01XXXXXXXXX')
             ->message('Send OTP SMS Test.')
             ->send();
-        dd($response->json());
+
+        return $response->json();
     }
 }
 ```
@@ -102,13 +120,20 @@ use RahulHaque\AdnSms\Facades\AdnSms;
 
 class SomeController
 {
+    /**
+     * Make request and return response
+     *
+     * @return \Illuminate\Http\Client\Response
+     * @throws \Throwable
+     */
     public function someFunction()
     {
         $response = AdnSms::bulk(['01XXXXXXXXX', '02XXXXXXXXX'])
             ->campaignTitle('Bulk SMS Test')
             ->message('Send Bulk SMS Test.')
             ->send();
-        dd($response->json());
+        
+        return $response->json();
     }
 }
 ```
@@ -152,10 +177,17 @@ use RahulHaque\AdnSms\Facades\AdnSms;
 
 class SomeController
 {
+    /**
+     * Make request and return response
+     *
+     * @return \Illuminate\Http\Client\Response
+     * @throws \Throwable
+     */
     public function someFunction()
     {
         $response = AdnSms::checkBalance();
-        dd($response->json());
+        
+        return $response->json();
     }
 }
 ```
@@ -169,10 +201,17 @@ use RahulHaque\AdnSms\Facades\AdnSms;
 
 class SomeController
 {
+    /**
+     * Make request and return response
+     *
+     * @return \Illuminate\Http\Client\Response
+     * @throws \Throwable
+     */
     public function someFunction()
     {
         $response = AdnSms::checkSmsStatus('SXXXXXXXXXXXXXXXX');
-        dd($response->json());
+        
+        return $response->json();
     }
 }
 ```
@@ -186,10 +225,17 @@ use RahulHaque\AdnSms\Facades\AdnSms;
 
 class SomeController
 {
+    /**
+     * Make request and return response
+     *
+     * @return \Illuminate\Http\Client\Response
+     * @throws \Throwable
+     */
     public function someFunction()
     {
         $response = AdnSms::checkCampaignStatus('CXXXXXXXXXXXXXXXX');
-        dd($response->json());
+        
+        return $response->json();
     }
 }
 ```

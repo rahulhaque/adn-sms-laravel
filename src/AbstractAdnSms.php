@@ -9,6 +9,7 @@ use RahulHaque\AdnSms\Exceptions\MissingRequiredMethodCallException;
 
 abstract class AbstractAdnSms
 {
+    protected $isEnabled;
     private $apiKey;
     private $apiSecret;
     protected $recipient;
@@ -21,6 +22,22 @@ abstract class AbstractAdnSms
 
     private $allowedRequestTypes = ['SINGLE_SMS', 'OTP', 'GENERAL_CAMPAIGN', 'MULTIBODY_CAMPAIGN'];
     private $allowedMessageFormats = ['TEXT', 'UNICODE'];
+
+    /**
+     * @return bool
+     */
+    private function getIsEnabled()
+    {
+        return $this->isEnabled;
+    }
+
+    /**
+     * @param bool $isEnabled
+     */
+    protected function setIsEnabled(string $isEnabled)
+    {
+        $this->isEnabled = $isEnabled;
+    }
 
     /**
      * @return string
@@ -196,6 +213,7 @@ abstract class AbstractAdnSms
      */
     public function __construct()
     {
+        $this->setIsEnabled(config('adn-sms.enabled'));
         $this->setApiKey(config('adn-sms.api_key'));
         $this->setApiSecret(config('adn-sms.api_secret'));
         $this->setFormat(config('adn-sms.message_format'));
@@ -210,6 +228,8 @@ abstract class AbstractAdnSms
      */
     protected function callToApi(array $data = [])
     {
+        if (!$this->isEnabled) Http::fake();
+
         $request = array_merge($data, [
             'api_key' => $this->getApiKey(),
             'api_secret' => $this->getApiSecret(),

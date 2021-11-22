@@ -3,6 +3,17 @@
 return [
     /*
     |--------------------------------------------------------------------------
+    | ADN SMS Service Enabled
+    |--------------------------------------------------------------------------
+    |
+    | You can totally turn the service On or Off from here. Useful if the APIs
+    | are down or ongoing maintenance.
+    |
+    */
+    "enabled" => env('ADN_SMS_ENABLED', true),
+
+    /*
+    |--------------------------------------------------------------------------
     | ADN SMS API Key and Secret
     |--------------------------------------------------------------------------
     |
