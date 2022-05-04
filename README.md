@@ -31,7 +31,7 @@ Laravel comes pre-installed with [Guzzle HTTP Client](https://docs.guzzlephp.org
 composer require guzzlehttp/guzzle
 ```
 
-Enable use of `Facades` in your Lumen application by uncommenting the `$app->withFacades();` call in the `bootstrap/app.php` file. 
+Enable use of `Facades` in your Lumen application by uncommenting the line `$app->withFacades();` call in the `bootstrap/app.php` file. 
 
 Register the service provider in the **Register Service Providers** section of the `bootstrap/app.php` file.
 
@@ -49,19 +49,17 @@ $app->configure('adn-sms');
 
 ## Configuration
 
-First have a look at the `./config/adn-sms.php` to know about all the options available out of the box. Some important ones mentioned below.
+First have a look at the `./config/adn-sms.php` to know about all the options available out of the box. Some important ones are mentioned below.
 
 **Service Enable/Disable**
 
-If you happen to disable the service in the configuration file, remember that the response body will always be empty. So, it is better to if check the response is empty before accessing any key from it. For example, access the response when `$response->body() != ""`
+You can easily turn off the whole service and any API calls from the config file. Comes in handy if the APIs are down or ongoing maintenance. Remember, if you set `enabled` to `false` in the configuration file, response body will always be empty string `$response->body() = ""`.
 
 ## Usage
 
 ### Single SMS
 
 **Send single SMS to single recipient.**
-
-To send a single SMS, call the `send()` method after providing `to()` and `message()` info. The `send()` method will always return `Illuminate\Http\Client\Response` object to interact further. See Laravel's HTTP Client documentation page for more details.
 
 ``` php
 use RahulHaque\AdnSms\Facades\AdnSms;
@@ -89,8 +87,6 @@ class SomeController
 
 **Send OTP SMS to single recipient.**
 
-To send a OTP SMS, call the `send()` method after providing `otp()` and `message()` info. The `send()` method will always return `Illuminate\Http\Client\Response` object to interact further. See Laravel's HTTP Client documentation page for more details.
-
 ``` php
 use RahulHaque\AdnSms\Facades\AdnSms;
 
@@ -117,7 +113,7 @@ class SomeController
 
 **Send single SMS to multiple recipients.**
 
-To send bulk SMS, call the `send()` method after providing array of recipients in the `bulk()` method. Bulk SMS sending also require you to provide a `campaignTitle()`. The `send()` method will always return `Illuminate\Http\Client\Response` object. See Laravel's HTTP Client documentation page for more details.
+Bulk SMS sending requires `campaignTitle()` as mandatory.
 
 ``` php
 use RahulHaque\AdnSms\Facades\AdnSms;
@@ -142,9 +138,9 @@ class SomeController
 }
 ```
 
-### Queue SMS
+### Queue SMS Sending (Laravel)
 
-To add sending SMS to Laravel queue, call the `queue()` method after calling all the required methods. The `queue()` method accepts an optional callback function. The `$response` from the API call will be automatically passed to the callback function which can be used to continue further process.
+You can also queue SMS sending. You can pass a callback function in the `queue()` method to receive the `$response` from the API call and process it further. It is really useful if you want to save the response in the database after queue executes. See example for finer detail.
 
 ``` php
 use RahulHaque\AdnSms\Facades\AdnSms;
@@ -159,8 +155,9 @@ class SomeController
             ->campaignTitle('Bulk SMS Test')
             ->message('Send Bulk SMS Test.')
             ->queue(function (Response $response) {
-                // Process the $response further
+                // Check if the response body is empty
                 if ($response->body() != "") {
+                    // Store the $response in the database
                     $model = new Table();
                     $model->data = $response->body();
                     $model->save();
@@ -170,13 +167,11 @@ class SomeController
 }
 ```
 
-Do not forget to run `php artisan queue:work` to send the queued SMS.
+Do not forget to run `php artisan queue:work`.
 
-**IMPORTANT:** SMS `queue()` method will not work in Lumen as it does not supports queueable closer. But don't lose hope. Create a queueable job in your Lumen application. Call the `send()` method from there and process the returned response further.
+**IMPORTANT:** `queue()` method is not available in Lumen as it does not supports queueable closer. However, you can create a queueable job in your Lumen application to do something similar. Call the `send()` method from your job and process the returned response further.
 
 ### Check Balance
-
-To check ADN SMS balance, simply call the `checkBalance()` method.
 
 ``` php
 use RahulHaque\AdnSms\Facades\AdnSms;
